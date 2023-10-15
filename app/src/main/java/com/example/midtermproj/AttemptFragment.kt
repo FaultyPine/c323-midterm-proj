@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.example.midtermproj.databinding.FragmentAttemptBinding
+import com.example.midtermproj.databinding.FragmentGameBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +24,8 @@ class AttemptFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var binding: FragmentAttemptBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -35,10 +39,21 @@ class AttemptFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_attempt, container, false)
+        //val view = inflater.inflate(R.layout.fragment_attempt, container, false)
+        binding = FragmentAttemptBinding.inflate(inflater, container, false)
+        val view = binding.root
 
         val viewModelFactory = GameViewModelFactory()
-        val gameViewModel = ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
+        //val gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
+        val gameViewModel = ViewModelProvider(requireActivity()).get(GameViewModel::class.java)
+
+
+        val attemptsTextView = binding.textAttempts
+
+        gameViewModel.GuessedEvent += {
+            val guessedEventArgs = it
+            attemptsTextView.text = "Number of attempts: ${guessedEventArgs.numAttempts}"
+        }
 
         return view
     }

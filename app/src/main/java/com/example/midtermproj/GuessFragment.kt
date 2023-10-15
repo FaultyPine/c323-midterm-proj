@@ -51,7 +51,9 @@ class GuessFragment : Fragment() {
         val view = binding.root
 
         val viewModelFactory = GameViewModelFactory()
-        val gameViewModel = ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
+        //val gameViewModel = ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
+        val gameViewModel = ViewModelProvider(requireActivity()).get(GameViewModel::class.java)
+
 
         binding.editTextPlayerName.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(mEdit: Editable) {}
@@ -97,17 +99,17 @@ class GuessFragment : Fragment() {
                 var guessResult = gameViewModel.AttemptGuess(guessedNum)
                 if (guessResult == GuessResult.HIGHER)
                 {
-                    Toast.makeText(activity, "Higher!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, "Higher!", Toast.LENGTH_SHORT).show()
                     wrongSound.start()
                 }
                 else if (guessResult == GuessResult.LOWER)
                 {
-                    Toast.makeText(activity, "Lower!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, "Lower!", Toast.LENGTH_SHORT).show()
                     wrongSound.start()
                 }
                 else
                 {
-                    Toast.makeText(activity, "Correct!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, "Correct!", Toast.LENGTH_SHORT).show()
                     correctSound.start()
                     val finalNumAttempts = gameViewModel.numAttempts
                     // TODO: transition back to main screen passing it the number of attempts

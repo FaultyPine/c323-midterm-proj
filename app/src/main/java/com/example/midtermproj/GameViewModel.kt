@@ -10,8 +10,14 @@ enum class GuessResult
     CORRECT
 }
 
+class GuessedEventArgs(pname: String, numAttempts: Int, result :GuessResult) {
+    var pName = pname
+    var numAttempts = numAttempts
+    var guessResult = result
+}
+
 class GameViewModel : ViewModel() {
-    var GuessedCorrectlyEvent = Event<Pair<String, Int>>()
+    var GuessedEvent = Event<GuessedEventArgs>()
 
     var playerName = ""
     //var prevScore = 0 // "score" and "attempts" i believe are synonymous in this assignment
@@ -27,7 +33,7 @@ class GameViewModel : ViewModel() {
     {
         currentNumber = Random.nextInt(1, 100 + 1)
         numAttempts = 0
-        GuessedCorrectlyEvent = Event<Pair<String, Int>>()
+        GuessedEvent = Event<GuessedEventArgs>()
     }
 
     fun AttemptGuess(guessNum: Int) : GuessResult
@@ -36,19 +42,15 @@ class GameViewModel : ViewModel() {
         var result = GuessResult.CORRECT
         if (guessNum < currentNumber)
         {
-            result = GuessResult.LOWER
+            result = GuessResult.HIGHER
         }
         else if (guessNum > currentNumber)
         {
-            result = GuessResult.HIGHER
+            result = GuessResult.LOWER
         }
+        // Notify all subscribers about this guess
+        GuessedEvent.invoke(GuessedEventArgs(playerName, numAttempts, result))
         return result;
-    }
-
-    fun SignalCorrectGuess()
-    {
-        // Notify all subscribers that we won with this player name and this score
-        GuessedCorrectlyEvent.invoke(Pair(playerName, numAttempts))
     }
 
 

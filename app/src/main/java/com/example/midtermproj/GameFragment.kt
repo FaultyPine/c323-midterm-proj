@@ -56,17 +56,29 @@ class GameFragment : Fragment() {
         val view = binding.root
 
         val viewModelFactory = GameViewModelFactory()
-        val gameViewModel = ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
+        //val gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
+        val gameViewModel = ViewModelProvider(requireActivity()).get(GameViewModel::class.java)
 
         val guessFragment = binding.guessFragment
         val attemptFragment = binding.attemptsFragment
 
+        var fm = childFragmentManager.beginTransaction()
+        fm.replace(R.id.guessFragment, GuessFragment()).commit()
+
+        fm = childFragmentManager.beginTransaction()
+        fm.replace(R.id.attemptsFragment, AttemptFragment()).commit()
+
         gameViewModel.Initialize()
 
-        gameViewModel.GuessedCorrectlyEvent += {
-            val playerName = it.first
-            val numAttempts = it.second
-            GameFragmentToMainScreen(playerName, numAttempts)
+        gameViewModel.GuessedEvent += {
+            val guessedEventArgs: GuessedEventArgs = it
+            val playerName = guessedEventArgs.pName
+            val numAttempts = guessedEventArgs.numAttempts
+            val guessResult = guessedEventArgs.guessResult
+            if (guessResult == GuessResult.CORRECT)
+            {
+                GameFragmentToMainScreen(playerName, numAttempts)
+            }
         }
 
         return view
