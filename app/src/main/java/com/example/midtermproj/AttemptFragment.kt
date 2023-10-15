@@ -43,9 +43,11 @@ class AttemptFragment : Fragment() {
         binding = FragmentAttemptBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val viewModelFactory = GameViewModelFactory()
+        val application = requireNotNull(this.activity).application
+        val dao = HighscoreDatabaseImpl.getInstance(application).highscoreDao
+        val viewModelFactory = GameViewModelFactory(dao)
         //val gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
-        val gameViewModel = ViewModelProvider(requireActivity()).get(GameViewModel::class.java)
+        val gameViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(GameViewModel::class.java)
 
 
         val attemptsTextView = binding.textAttempts

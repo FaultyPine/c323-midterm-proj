@@ -1,6 +1,7 @@
 package com.example.midtermproj
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -48,10 +49,9 @@ class MainFragment : Fragment() {
         val playerName = args.playerName
         val prevScore = args.prevAttempts
 
-        if (playerName.isNotEmpty())
+        if (playerName.isNotEmpty() || prevScore > 0)
         {
             binding.textWelcome.text = "${playerName} score: ${prevScore}\nPlay Another Game?"
-            // TODO: update highscore database here?
         }
 
         binding.bPlay.setOnClickListener{

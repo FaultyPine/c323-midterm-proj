@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.midtermproj.databinding.FragmentGuessBinding
+import java.lang.Integer.max
+import java.lang.Integer.min
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -50,9 +52,11 @@ class GuessFragment : Fragment() {
         binding = FragmentGuessBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val viewModelFactory = GameViewModelFactory()
-        //val gameViewModel = ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
-        val gameViewModel = ViewModelProvider(requireActivity()).get(GameViewModel::class.java)
+        val application = requireNotNull(this.activity).application
+        val dao = HighscoreDatabaseImpl.getInstance(application).highscoreDao
+        val viewModelFactory = GameViewModelFactory(dao)
+        //val gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
+        val gameViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(GameViewModel::class.java)
 
 
         binding.editTextPlayerName.addTextChangedListener(object : TextWatcher {
@@ -70,6 +74,16 @@ class GuessFragment : Fragment() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int)
             {
                 currentGuessText = s.toString()
+                var tryParseNumFromText = currentGuessText.toIntOrNull()
+                if (tryParseNumFromText != null)
+                {
+                    if (tryParseNumFromText < 0 || tryParseNumFromText > 100)
+                    {
+                        tryParseNumFromText = min(100, max(0, tryParseNumFromText))
+                        currentGuessText = tryParseNumFromText.toString()
+                        binding.editTextGuess.setText(currentGuessText)
+                    }
+                }
             }
         })
 
@@ -77,14 +91,23 @@ class GuessFragment : Fragment() {
             var tryParseNumFromText = currentGuessText.toIntOrNull()
             if (tryParseNumFromText != null)
             {
-                currentGuessText = (tryParseNumFromText+1).toString()
+                if (tryParseNumFromText!! < 100)
+                {
+                    currentGuessText = (tryParseNumFromText!! + 1).toString()
+                    binding.editTextGuess.setText(currentGuessText)
+                }
             }
         }
         binding.bMinus.setOnClickListener {
             var tryParseNumFromText = currentGuessText.toIntOrNull()
             if (tryParseNumFromText != null)
             {
-                currentGuessText = (tryParseNumFromText-1).toString()
+                if (tryParseNumFromText!! > 0)
+                {
+                    currentGuessText = (tryParseNumFromText!! - 1).toString()
+                    binding.editTextGuess.setText(currentGuessText)
+                }
+
             }
         }
 
@@ -95,7 +118,7 @@ class GuessFragment : Fragment() {
             var tryParseNumFromText = currentGuessText.toIntOrNull()
             if (tryParseNumFromText != null)
             {
-                var guessedNum = tryParseNumFromText
+                var guessedNum = tryParseNumFromText!!
                 var guessResult = gameViewModel.AttemptGuess(guessedNum)
                 if (guessResult == GuessResult.HIGHER)
                 {
@@ -111,10 +134,6 @@ class GuessFragment : Fragment() {
                 {
                     Toast.makeText(activity, "Correct!", Toast.LENGTH_SHORT).show()
                     correctSound.start()
-                    val finalNumAttempts = gameViewModel.numAttempts
-                    // TODO: transition back to main screen passing it the number of attempts
-                    // it explicitly specifies in the rubric we need to pass the data back to main screen, can't just access it
-
                 }
             }
         }

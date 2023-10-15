@@ -4,7 +4,12 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.*
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.example.midtermproj.databinding.FragmentGameBinding
+import com.example.midtermproj.databinding.FragmentHighscoreBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +26,9 @@ class HighscoreFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var binding: FragmentHighscoreBinding
+    var hasHighscores = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -34,7 +42,36 @@ class HighscoreFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_highscore, container, false)
+        //val view = inflater.inflate(R.layout.fragment_highscore, container, false)
+        binding = FragmentHighscoreBinding.inflate(inflater, container, false)
+        val view = binding.root
+
+        val application = requireNotNull(this.activity).application
+        val dao = HighscoreDatabaseImpl.getInstance(application).highscoreDao
+        val viewModelFactory = GameViewModelFactory(dao)
+        //val gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
+        val gameViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(GameViewModel::class.java)
+
+        //val highscores = gameViewModel.GetHighscores(dao)
+
+        val adapter = HighscoreAdapter(
+            { id: Int -> run {}}, // on highscore clicked
+            { id: Int -> run {
+                val dialog = HighscoreDeleteDialog(id)
+                dialog.show(childFragmentManager, HighscoreDeleteDialog.TAG)
+            }}
+        )
+        binding.highscoreRecyclerView.adapter = adapter
+
+        gameViewModel.allHighscores.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                adapter.submitList(it)
+                binding.textNoScoresText.visibility = INVISIBLE
+                binding.highscoreRecyclerView.visibility = VISIBLE
+            }
+        })
+
+        return view
     }
 
     companion object {

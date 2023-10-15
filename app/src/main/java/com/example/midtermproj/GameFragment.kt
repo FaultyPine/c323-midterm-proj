@@ -1,6 +1,7 @@
 package com.example.midtermproj
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -55,12 +56,13 @@ class GameFragment : Fragment() {
         binding = FragmentGameBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val viewModelFactory = GameViewModelFactory()
+        val application = requireNotNull(this.activity).application
+        val dao = HighscoreDatabaseImpl.getInstance(application).highscoreDao
+        val viewModelFactory = GameViewModelFactory(dao)
         //val gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
-        val gameViewModel = ViewModelProvider(requireActivity()).get(GameViewModel::class.java)
+        val gameViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(GameViewModel::class.java)
 
-        val guessFragment = binding.guessFragment
-        val attemptFragment = binding.attemptsFragment
+
 
         var fm = childFragmentManager.beginTransaction()
         fm.replace(R.id.guessFragment, GuessFragment()).commit()
@@ -77,7 +79,9 @@ class GameFragment : Fragment() {
             val guessResult = guessedEventArgs.guessResult
             if (guessResult == GuessResult.CORRECT)
             {
+                Log.v("DEBUG", "Won with player $playerName : $numAttempts")
                 GameFragmentToMainScreen(playerName, numAttempts)
+                gameViewModel.RecordHighscoreInDatabase(guessedEventArgs, dao)
             }
         }
 
