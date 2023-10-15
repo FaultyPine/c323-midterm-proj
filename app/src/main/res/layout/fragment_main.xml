@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    tools:context=".MainFragment">
+
+    <TextView
+        android:id="@+id/textWelcome"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:padding="10dp"
+        android:text="Welcome to the game"
+        android:textAlignment="center"
+        android:textSize="50dp" />
+
+    <Button
+        android:id="@+id/bPlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:layout_weight="0.5"
+        android:background="#8A3B3349"
+        android:backgroundTint="#7C2C1D1D"
+        android:outlineProvider="paddedBounds"
+        android:text="Play Game"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="45dp"
+        app:cornerRadius="10dp"
+        app:iconTint="#402929" />
+
+    <Button
+        android:id="@+id/bHighscores"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:layout_weight="0.5"
+        android:background="#66FFFFFF"
+        android:text="View Highscores"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="45dp" />
+</LinearLayout>
