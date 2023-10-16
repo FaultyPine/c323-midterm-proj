@@ -17,6 +17,6 @@ interface HighscoreDao {
     suspend fun delete(score: Highscore)
     @Query("SELECT * FROM highscore_table WHERE highscoreId = :key")
     fun get(key: Int): LiveData<Highscore>
-    @Query("SELECT * FROM highscore_table ORDER BY highscoreId ASC")
+    @Query("SELECT * FROM highscore_table ORDER BY highscore_attempts ASC")
     fun getAll(): LiveData<List<Highscore>>
 }

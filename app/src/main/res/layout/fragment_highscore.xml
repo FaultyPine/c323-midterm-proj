@@ -6,25 +6,53 @@
     tools:context=".HighscoreFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    
+    <Button
+    android:id="@+id/bBack"
+        android:layout_width="wrap_content"
+        android:textAlignment="center"
+    android:layout_height="wrap_content"
+    android:layout_weight="0"
+    android:background="#46757575"
+    android:text="BACK"
+    android:textColor="#000000"
+    android:textStyle="bold"
+    app:cornerRadius="10dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/textNoScoresText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="No high scores yet"
         android:textAlignment="center"
+        android:layout_height="wrap_content"
+        android:text="No high scores yet"
         android:textAllCaps="false"
-        android:textSize="30dp"
+        android:textSize="25dp"
         android:textStyle="bold" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/highscoreRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:visibility="invisible">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
+    </LinearLayout>
+
 
 </FrameLayout>

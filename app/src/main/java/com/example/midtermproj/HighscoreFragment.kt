@@ -8,7 +8,11 @@ import android.view.View.*
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import android.widget.Button
+import androidx.navigation.fragment.navArgs
 import com.example.midtermproj.databinding.FragmentGameBinding
+import com.example.midtermproj.databinding.FragmentMainBinding
 import com.example.midtermproj.databinding.FragmentHighscoreBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -28,6 +32,8 @@ class HighscoreFragment : Fragment() {
 
     private lateinit var binding: FragmentHighscoreBinding
     var hasHighscores = false
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +59,11 @@ class HighscoreFragment : Fragment() {
         val gameViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(GameViewModel::class.java)
 
         //val highscores = gameViewModel.GetHighscores(dao)
+
+        binding.bBack.setOnClickListener{
+            val action = HighscoreFragmentDirections.actionHighscoreFragmentToMainFragment()
+            this.findNavController().navigate(action)
+        }
 
         val adapter = HighscoreAdapter(
             { id: Int -> run {}}, // on highscore clicked
